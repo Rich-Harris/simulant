@@ -1,0 +1,11 @@
+{
+	"undef": true,
+	"unused": true,
+	"globals": {
+		"define": true,
+		"window": true,
+		"document": true,
+		"MouseEvent": true,
+		"Element": true
+	}
+}
