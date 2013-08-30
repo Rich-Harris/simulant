@@ -2,7 +2,30 @@
   "name": "simulant",
   "description": "Simulated DOM events for automated testing",
   "version": "0.1.0",
-  "author": "Rich Harris",
+  "author": {
+    "name": "Rich Harris"
+  },
+  "licenses": [
+    {
+      "type": "MIT"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Rich-Harris/Simulant.git"
+  },
+  "github": "https://github.com/Rich-Harris/Simulant",
+  "bugs": {
+    "web": "https://github.com/Rich-Harris/Simulant/issues"
+  },
+  "jam": {
+    "main": "simulant.js",
+    "include": [
+      "simulant.js",
+      "simulant.min.js",
+      "README.md"
+    ]
+  },
   "devDependencies": {
     "grunt": "~0.4.1",
     "grunt-contrib-concat": "~0.3.0",
