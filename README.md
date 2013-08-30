@@ -7,7 +7,7 @@ Sometimes you need to create fake DOM events so that you can test the parts of y
 // WITHOUT SIMULANT.JS
 try {
   // DOM Level 3
-  event = new MouseEvent( 'move', {
+  event = new MouseEvent( 'mousemove', {
     bubbles: true,
     cancelable: true,
     relatedTarget: previousNode
@@ -20,7 +20,7 @@ catch ( err ) {
   if ( document.createEvent ) {
     // DOM Level 2
     event = document.createEvent( 'MouseEvents' );
-    event.initMouseEvent( 'move', true, true, window, null, 0, 0, 0, 0, '', false, false, false, false, 0, previousNode );
+    event.initMouseEvent( 'mousemove', true, true, window, null, 0, 0, 0, 0, '', false, false, false, false, 0, previousNode );
 
     node.dispatchEvent( event );
   }
@@ -30,13 +30,13 @@ catch ( err ) {
     event = document.createEventObject();
     event.relatedTarget = previousNode;
 
-    node.fireEvent( 'onmove', event );
+    node.fireEvent( 'onmousemove', event );
   }
 }
 
 
 // WITH SIMULANT.JS
-simulant.fire( node, 'move', { relatedTarget: previousNode });
+simulant.fire( node, 'mousemove', { relatedTarget: previousNode });
 ```
 
 Simulant was created to make automated testing of [Ractive.js](https://github.com/Rich-Harris/Ractive) across different browsers easier.
