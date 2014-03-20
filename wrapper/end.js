@@ -1,3 +1,8 @@
+// export as Common JS module...
+if ( typeof module !== "undefined" && module.exports ) {
+	module.exports = simulant;
+}
+
 // export as AMD module
 if ( typeof define === "function" && define.amd ) {
 	define( function () {
