@@ -3,6 +3,7 @@
   "description": "Simulated DOM events for automated testing",
   "version": "0.1.0",
   "author": "Rich Harris",
+  "main": "simulant.js",
   "ignore": [
   	".*",
   	"*.json",
