@@ -7,7 +7,7 @@
   "ignore": [
   	".*",
   	"*.json",
-  	"*.MD",
+  	"*.md",
   	"build",
   	"grunt",
   	"release",
