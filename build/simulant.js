@@ -479,6 +479,11 @@ if ( typeof define === "function" && define.amd ) {
 	});
 }
 
+// ... or as CommonJS module
+else if ( typeof module !== 'undefined' && module.exports ) {
+	module.exports = simulant;
+}
+
 // ... or as browser global
 else {
 	global.simulant = simulant;

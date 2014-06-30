@@ -3,6 +3,7 @@
 	"unused": true,
 	"globals": {
 		"define": true,
+		"module": true,
 		"window": true,
 		"document": true,
 		"MouseEvent": true,
