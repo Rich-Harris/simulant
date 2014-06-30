@@ -18,6 +18,7 @@
   "bugs": {
     "web": "https://github.com/Rich-Harris/Simulant/issues"
   },
+  "main": "simulant.js",
   "jam": {
     "main": "simulant.js",
     "include": [
