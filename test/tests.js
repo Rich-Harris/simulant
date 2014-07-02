@@ -2,7 +2,8 @@
 
 	'use strict';
 
-	var fixture = document.getElementById( 'qunit-fixture' );
+	var fixture = document.getElementById( 'qunit-fixture' ),
+		isTouch = !!('ontouchstart' in window) && navigator.userAgent.indexOf('PhantomJS') < 0;
 
 	if ( !window.addEventListener && simulant.polyfill ) {
 		simulant.polyfill();
@@ -20,7 +21,7 @@
 		});
 
 		simulant.fire( fixture, 'click' );
-		
+
 		fixture.removeEventListener( 'click', handler );
 	});
 
@@ -123,5 +124,22 @@
 
 		fixture.removeEventListener( 'keydown', handler );
 	});
+	
+	if (isTouch) {
+		test( 'Touch events get triggered', function ( t ) {
+			var handler;
+
+			expect( 1 );
+
+			fixture.addEventListener( 'touchstart', handler = function ( event ) {
+				t.ok( true );
+			});
+
+			simulant.fire( fixture, 'touchstart');
+
+			fixture.removeEventListener( 'touchstart', handler );
+		});
+	}
+
 
 }());
