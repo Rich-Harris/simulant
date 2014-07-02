@@ -47,7 +47,7 @@ var eventTypesByGroup = {
 	BeforeUnloadEvent:           'beforeunload',
 	TimeEvent:                   'beginEvent endEvent repeatEvent',
 	FocusEvent:                  'blur focus focusin focusout',
-	MouseEvent:                  'click contextmenu dblclick mousedown mouseenter mouseleave mousemove mouseout mouseover mouseup show',
+	MouseEvent:                  'click contextmenu dblclick mousedown mouseenter mouseleave mousemove mouseout mouseover mouseup show touchcancel touchend touchenter touchleave touchmove touchstart',
 	SensorEvent:                 'compassneedscalibration userproximity',
 	OfflineAudioCompletionEvent: 'complete',
 	CompositionEvent:            'compositionend compositionstart compositionupdate',
@@ -67,7 +67,6 @@ var eventTypesByGroup = {
 	StorageEvent:                'storage',
 	SVGEvent:                    'SVGAbort SVGError SVGLoad SVGResize SVGScroll SVGUnload',
 	SVGZoomEvent:                'SVGZoom',
-	TouchEvent:                  'touchcancel touchend touchenter touchleave touchmove touchstart',
 	TransitionEvent:             'transitionend',
 	WheelEvent:                  'wheel'
 };
@@ -97,13 +96,12 @@ var initialisersByGroup = {
 	MouseEvent:          [ global.MouseEvent,          'initMouseEvent'       ],
 	CompositionEvent:    [ global.CompositionEvent,    'initCompositionEvent' ],
 	HashChangeEvent:     [ global.HashChangeEvent,     'initHashChangeEvent'  ],
-	KeyboardEvent:       [ global.Event,               'initEvent'            ], 
+	KeyboardEvent:       [ global.Event,               'initEvent'            ],
 	ProgressEvent:       [ global.ProgressEvent,       'initEvent'            ],
 	MessageEvent:        [ global.MessageEvent,        'initMessageEvent'     ], // TODO prefixed?
 	PageTransitionEvent: [ global.PageTransitionEvent, 'initEvent'            ],
 	PopStateEvent:       [ global.PopStateEvent,       'initEvent'            ],
 	StorageEvent:        [ global.StorageEvent,        'initStorageEvent'     ],
-	TouchEvent:          [ global.TouchEvent,          'initTouchEvent'       ],
 	WheelEvent:          [ global.WheelEvent,          'initWheelEvent'       ] // TODO this differs between browsers...
 };
 
