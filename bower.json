@@ -1,9 +1,9 @@
 {
   "name": "simulant",
   "description": "Simulated DOM events for automated testing",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "author": "Rich Harris",
-  "main": "simulant.js",
+  "main": "build/simulant.js",
   "ignore": [
   	".*",
   	"*.json",
