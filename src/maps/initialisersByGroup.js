@@ -5,13 +5,12 @@ var initialisersByGroup = {
 	MouseEvent:          [ global.MouseEvent,          'initMouseEvent'       ],
 	CompositionEvent:    [ global.CompositionEvent,    'initCompositionEvent' ],
 	HashChangeEvent:     [ global.HashChangeEvent,     'initHashChangeEvent'  ],
-	KeyboardEvent:       [ global.Event,               'initEvent'            ], 
+	KeyboardEvent:       [ global.Event,               'initEvent'            ],
 	ProgressEvent:       [ global.ProgressEvent,       'initEvent'            ],
 	MessageEvent:        [ global.MessageEvent,        'initMessageEvent'     ], // TODO prefixed?
 	PageTransitionEvent: [ global.PageTransitionEvent, 'initEvent'            ],
 	PopStateEvent:       [ global.PopStateEvent,       'initEvent'            ],
 	StorageEvent:        [ global.StorageEvent,        'initStorageEvent'     ],
-	TouchEvent:          [ global.TouchEvent,          'initTouchEvent'       ],
 	WheelEvent:          [ global.WheelEvent,          'initWheelEvent'       ] // TODO this differs between browsers...
 };
 

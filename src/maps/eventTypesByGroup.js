@@ -7,7 +7,7 @@ var eventTypesByGroup = {
 	BeforeUnloadEvent:           'beforeunload',
 	TimeEvent:                   'beginEvent endEvent repeatEvent',
 	FocusEvent:                  'blur focus focusin focusout',
-	MouseEvent:                  'click contextmenu dblclick mousedown mouseenter mouseleave mousemove mouseout mouseover mouseup show',
+	MouseEvent:                  'click contextmenu dblclick mousedown mouseenter mouseleave mousemove mouseout mouseover mouseup show touchcancel touchend touchenter touchleave touchmove touchstart',
 	SensorEvent:                 'compassneedscalibration userproximity',
 	OfflineAudioCompletionEvent: 'complete',
 	CompositionEvent:            'compositionend compositionstart compositionupdate',
@@ -27,7 +27,6 @@ var eventTypesByGroup = {
 	StorageEvent:                'storage',
 	SVGEvent:                    'SVGAbort SVGError SVGLoad SVGResize SVGScroll SVGUnload',
 	SVGZoomEvent:                'SVGZoom',
-	TouchEvent:                  'touchcancel touchend touchenter touchleave touchmove touchstart',
 	TransitionEvent:             'transitionend',
 	WheelEvent:                  'wheel'
 };
