@@ -3,3 +3,5 @@ node_modules/
 /index.html
 demo/
 tmp/
+.gobble
+.tmp

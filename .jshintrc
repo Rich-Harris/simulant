@@ -1,8 +1,10 @@
 {
+	"esnext": true,
 	"undef": true,
 	"unused": true,
 	"globals": {
 		"define": true,
+		"require": true,
 		"module": true,
 		"window": true,
 		"document": true,
