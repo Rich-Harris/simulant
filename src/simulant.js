@@ -1,93 +1,50 @@
-var eventGroupByType,
-	initialisers,
-	modern,
-	ancient,
-	modifiers,
-	getModifiersList;
+import ancient from './modes/ancient';
+import legacy from './modes/legacy';
+import modern from './modes/modern';
+import polyfill from './utils/polyfill';
 
-
-
-modifiers = [
-	[ 'ctrlKey',  'Control' ],
-	[ 'shiftKey', 'Shift'   ],
-	[ 'altKey',   'Alt'     ],
-	[ 'metaKey',  'Meta'    ]
-];
-
-getModifiersList = function ( params ) {
-	var list = [], i, modifier;
-
-	i = modifiers.length;
-	while ( i-- ) {
-		modifier = modifiers[i];
-		if ( params[ modifier[0] ] ) {
-			list[ list.length ] = modifier[1];
-		}
-	}
-
-	return list.join( ' ' );
-};
-
-
-// unpack event groups
-(function () {
-	var group, types, i, initMethod;
-
-	eventGroupByType = {};
-
-	for ( group in eventTypesByGroup ) {
-		if ( eventTypesByGroup.hasOwnProperty( group ) ) {
-			types = eventTypesByGroup[ group ].split( ' ' );
-
-			i = types.length;
-			while ( i-- ) {
-				eventGroupByType[ types[i] ] = group;
-			}
-		}
-	}
-
-	for ( initMethod in initialiserParams ) {
-		if ( initialiserParams.hasOwnProperty( initMethod ) ) {
-			initialiserParams[ initMethod ] = initialiserParams[ initMethod ].split( ' ' );
-		}
-	}
-}());
-
-
+var simulant;
 
 try {
-	// event initialisersByGroup
 	new MouseEvent( 'click' );
-	modern = true;
-}
-
-catch ( err ) {
+	simulant = modern();
+} catch ( err ) {
 	if ( !document.createEvent ) {
 		if ( document.createEventObject ) {
-			ancient = true;
+			simulant = ancient();
 		} else {
 			throw new Error( 'Events cannot be created in this browser' );
 		}
+	} else {
+		simulant = legacy();
 	}
 }
 
-if ( modern ) {
-	useModern();
+if ( document.dispatchEvent ) {
+	simulant.fire = function ( node, event, params ) {
+		if ( typeof event === 'string' ) {
+			event = simulant( event, params );
+		}
+
+		node.dispatchEvent( event );
+		return event;
+	};
+} else if ( document.fireEvent ) {
+	simulant.fire = function ( node, event, params ) {
+		if ( typeof event === 'string' ) {
+			event = simulant( event, params );
+		}
+
+		node.fireEvent( 'on' + event.type, event );
+
+		// Special case - checkbox inputs
+		if ( node.tagName === 'INPUT' && node.type === 'checkbox' ) {
+			node.click();
+		}
+		return event;
+	};
 }
 
-else if ( !ancient ) {
-	useLegacy();
-}
+simulant.polyfill = polyfill;
 
-else {
-	useAncient();
-}
-
-
-simulant.params = function ( type ) {
-	var group;
-
-	group = eventGroupByType[ type ];
-	return initialiserParams[ initialisersByGroup[ group ][1] ].split( ' ' );
-};
-
+export default simulant;

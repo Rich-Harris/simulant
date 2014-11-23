@@ -1,5 +1,8 @@
-var useModern = function () {
-	simulant = function ( type, params ) {
+import { defaults, eventGroupByType, initialisersByGroup, initialiserParams } from '../maps';
+import extendWithKeyboardParams from '../utils/extendWithKeyboardParams';
+
+export default function () {
+	var simulant = function ( type, params = {} ) {
 		var event, group, Constructor, paramsList, paramName, i, extendedParams, isKeyboardEvent;
 
 		group = eventGroupByType[ type ];
@@ -11,10 +14,6 @@ var useModern = function () {
 
 		Constructor = initialisersByGroup[ group ][0];
 
-		if ( !params ) {
-			params = {};
-		}
-
 		extendedParams = {
 			bubbles: true, // TODO some events don't bubble?
 			cancelable: true
@@ -25,7 +24,7 @@ var useModern = function () {
 
 		while ( i-- ) {
 			paramName = paramsList[i];
-			extendedParams[ paramName ] = ( params[ paramName ] !== undefined ? params[ paramName ] : defaults[ paramName ] );
+			extendedParams[ paramName ] = ( paramName in params ? params[ paramName ] : defaults[ paramName ] );
 		}
 
 		event = new Constructor( type, extendedParams );
@@ -38,5 +37,5 @@ var useModern = function () {
 	};
 
 	simulant.mode = 'modern';
-};
-
+	return simulant;
+}

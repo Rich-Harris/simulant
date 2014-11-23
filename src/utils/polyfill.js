@@ -1,4 +1,4 @@
-simulant.polyfill = function () {
+export default function polyfill () {
 
 	// https://gist.github.com/Rich-Harris/6010282 via https://gist.github.com/jonathantneal/2869388
 	// addEventListener polyfill IE6+
@@ -29,7 +29,7 @@ simulant.polyfill = function () {
 
 		listeners = element.listeners || ( element.listeners = [] );
 		i = listeners.length;
-		
+
 		listeners[i] = [ listener, function (e) {
 			listener.call( element, new Event( e, element ) );
 		}];
@@ -54,10 +54,10 @@ simulant.polyfill = function () {
 		}
 	};
 
-	global.addEventListener = document.addEventListener = addEventListener;
-	global.removeEventListener = document.removeEventListener = removeEventListener;
+	window.addEventListener = document.addEventListener = addEventListener;
+	window.removeEventListener = document.removeEventListener = removeEventListener;
 
-	if ( 'Element' in global ) {
+	if ( 'Element' in window ) {
 		Element.prototype.addEventListener = addEventListener;
 		Element.prototype.removeEventListener = removeEventListener;
 	} else {
@@ -70,5 +70,4 @@ simulant.polyfill = function () {
 	}
 
 	addEventListener.simulant = true;
-
-};
+}
