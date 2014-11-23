@@ -1,492 +1,415 @@
-(function ( global ) {
-
-'use strict';
-
-var simulant;
-
-
-var defaults = {
-	bubbles:       true,
-	cancelable:    true,
-	view:          global,
-	detail:        null,
-	screenX:       0,
-	screenY:       0,
-	clientX:       0,
-	clientY:       0,
-	ctrlKey:       false,
-	altKey:        false,
-	shiftKey:      false,
-	metaKey:       false,
-	button:        0,
-	relatedTarget: null,
-	locale:        '',
-	oldURL:        '',
-	newURL:        '',
-	origin:        '',
-	lastEventId:   '',
-	source:        null,
-	ports:         [],
-	oldValue:      null,
-	newValue:      null,
-	url:           '',
-	storageArea:   null,
-	deltaX:        0,
-	deltaY:        0,
-	deltaZ:        0,
-	deltaMode:     0
-};
-
-
-// TODO remove the ones that aren't supported in any browser
-var eventTypesByGroup = {
-	UIEvent:                     'abort error resize scroll select unload',
-	Event:                       'afterprint beforeprint cached canplay canplaythrough change chargingchange chargingtimechange checking close dischargingtimechange DOMContentLoaded downloading durationchange emptied ended fullscreenchange fullscreenerror input invalid levelchange loadeddata loadedmetadata noupdate obsolete offline online open orientationchange pause pointerlockchange pointerlockerror play playing ratechange readystatechange reset seeked seeking stalled submit success suspend timeupdate updateready visibilitychange volumechange waiting',
-	AnimationEvent:              'animationend animationiteration animationstart',
-	AudioProcessingEvent:        'audioprocess',
-	BeforeUnloadEvent:           'beforeunload',
-	TimeEvent:                   'beginEvent endEvent repeatEvent',
-	FocusEvent:                  'blur focus focusin focusout',
-	MouseEvent:                  'click contextmenu dblclick mousedown mouseenter mouseleave mousemove mouseout mouseover mouseup show',
-	SensorEvent:                 'compassneedscalibration userproximity',
-	OfflineAudioCompletionEvent: 'complete',
-	CompositionEvent:            'compositionend compositionstart compositionupdate',
-	ClipboardEvent:              'copy cut paste',
-	DeviceLightEvent:            'devicelight',
-	DeviceMotionEvent:           'devicemotion',
-	DeviceOrientationEvent:      'deviceorientation',
-	DeviceProximityEvent:        'deviceproximity',
-	DragEvent:                   'drag dragend dragenter dragleave dragover dragstart drop',
-	GamepadEvent:                'gamepadconnected gamepaddisconnected',
-	HashChangeEvent:             'hashchange',
-	KeyboardEvent:               'keydown keypress keyup',
-	ProgressEvent:               'loadend loadstart progress timeout',
-	MessageEvent:                'message',
-	PageTransitionEvent:         'pagehide pageshow',
-	PopStateEvent:               'popstate',
-	StorageEvent:                'storage',
-	SVGEvent:                    'SVGAbort SVGError SVGLoad SVGResize SVGScroll SVGUnload',
-	SVGZoomEvent:                'SVGZoom',
-	TouchEvent:                  'touchcancel touchend touchenter touchleave touchmove touchstart',
-	TransitionEvent:             'transitionend',
-	WheelEvent:                  'wheel'
-};
-
-
-// The parameters required by event constructors and init methods, in the order the init methods need them.
-
-// There is no initKeyboardEvent or initKeyEvent here. Keyboard events are a goddamned mess. You can't fake them
-// well in any browser - the which and keyCode properties are readonly, for example. So we don't actually use the
-// KeyboardEvent constructor, or the initKeyboardEvent or initKeyEvent methods. Instead we use a bog standard
-// Event and add the required parameters as expando properties.
-
-// TODO I think in some browsers we need to use modifiersList instead of ctrlKey/shiftKey etc?
-var initialiserParams = {
-	initUIEvent:          'view detail',
-	initMouseEvent:       'view detail screenX screenY clientX clientY ctrlKey altKey shiftKey metaKey button relatedTarget',
-	initCompositionEvent: 'view detail data locale',
-	initHashChangeEvent:  'oldURL newURL',
-	initMessageEvent:     'data origin lastEventId source ports',
-	initStorageEvent:     'key oldValue newValue url storageArea',
-	initWheelEvent:       'view detail screenX screenY clientX clientY ctrlKey altKey shiftKey metaKey button relatedTarget deltaX deltaY deltaZ deltaMode'
-};
-var initialisersByGroup = {
-	UIEvent:             [ global.UIEvent,             'initUIEvent'          ],
-	Event:               [ global.Event,               'initEvent'            ],
-	FocusEvent:          [ global.FocusEvent,          'initUIEvent'          ],
-	MouseEvent:          [ global.MouseEvent,          'initMouseEvent'       ],
-	CompositionEvent:    [ global.CompositionEvent,    'initCompositionEvent' ],
-	HashChangeEvent:     [ global.HashChangeEvent,     'initHashChangeEvent'  ],
-	KeyboardEvent:       [ global.Event,               'initEvent'            ],
-	ProgressEvent:       [ global.ProgressEvent,       'initEvent'            ],
-	MessageEvent:        [ global.MessageEvent,        'initMessageEvent'     ], // TODO prefixed?
-	PageTransitionEvent: [ global.PageTransitionEvent, 'initEvent'            ],
-	PopStateEvent:       [ global.PopStateEvent,       'initEvent'            ],
-	StorageEvent:        [ global.StorageEvent,        'initStorageEvent'     ],
-	TouchEvent:          [ global.TouchEvent,          'initTouchEvent'       ],
-	WheelEvent:          [ global.WheelEvent,          'initWheelEvent'       ] // TODO this differs between browsers...
-};
+"use strict";
+
+(function (global, factory) {
+  "use strict";
+
+  if (typeof define === "function" && define.amd) {
+    // export as AMD
+    define([], factory);
+  } else if (typeof module !== "undefined" && module.exports && typeof require === "function") {
+    // node/browserify
+    module.exports = factory();
+  } else {
+    // browser global
+    global.simulant = factory();
+  }
+}(typeof window !== "undefined" ? window : this, function () {
+  "use strict";
+
+  var maps__defaults = {
+    bubbles: true,
+    cancelable: true,
+    view: window,
+    detail: null,
+    screenX: 0,
+    screenY: 0,
+    clientX: 0,
+    clientY: 0,
+    ctrlKey: false,
+    altKey: false,
+    shiftKey: false,
+    metaKey: false,
+    button: 0,
+    relatedTarget: null,
+    locale: "",
+    oldURL: "",
+    newURL: "",
+    origin: "",
+    lastEventId: "",
+    source: null,
+    ports: [],
+    oldValue: null,
+    newValue: null,
+    url: "",
+    storageArea: null,
+    deltaX: 0,
+    deltaY: 0,
+    deltaZ: 0,
+    deltaMode: 0
+  };
+
+
+  // TODO remove the ones that aren't supported in any browser
+  var maps__eventTypesByGroup = {
+    UIEvent: "abort error resize scroll select unload",
+    Event: "afterprint beforeprint cached canplay canplaythrough change chargingchange chargingtimechange checking close dischargingtimechange DOMContentLoaded downloading durationchange emptied ended fullscreenchange fullscreenerror input invalid levelchange loadeddata loadedmetadata noupdate obsolete offline online open orientationchange pause pointerlockchange pointerlockerror play playing ratechange readystatechange reset seeked seeking stalled submit success suspend timeupdate updateready visibilitychange volumechange waiting",
+    AnimationEvent: "animationend animationiteration animationstart",
+    AudioProcessingEvent: "audioprocess",
+    BeforeUnloadEvent: "beforeunload",
+    TimeEvent: "beginEvent endEvent repeatEvent",
+    FocusEvent: "blur focus focusin focusout",
+    MouseEvent: "click contextmenu dblclick mousedown mouseenter mouseleave mousemove mouseout mouseover mouseup show",
+    SensorEvent: "compassneedscalibration userproximity",
+    OfflineAudioCompletionEvent: "complete",
+    CompositionEvent: "compositionend compositionstart compositionupdate",
+    ClipboardEvent: "copy cut paste",
+    DeviceLightEvent: "devicelight",
+    DeviceMotionEvent: "devicemotion",
+    DeviceOrientationEvent: "deviceorientation",
+    DeviceProximityEvent: "deviceproximity",
+    DragEvent: "drag dragend dragenter dragleave dragover dragstart drop",
+    GamepadEvent: "gamepadconnected gamepaddisconnected",
+    HashChangeEvent: "hashchange",
+    KeyboardEvent: "keydown keypress keyup",
+    ProgressEvent: "loadend loadstart progress timeout",
+    MessageEvent: "message",
+    PageTransitionEvent: "pagehide pageshow",
+    PopStateEvent: "popstate",
+    StorageEvent: "storage",
+    SVGEvent: "SVGAbort SVGError SVGLoad SVGResize SVGScroll SVGUnload",
+    SVGZoomEvent: "SVGZoom",
+    TouchEvent: "touchcancel touchend touchenter touchleave touchmove touchstart",
+    TransitionEvent: "transitionend",
+    WheelEvent: "wheel"
+  };
+
+  var maps__eventGroupByType = {};
+
+  Object.keys(maps__eventTypesByGroup).forEach(function (group) {
+    var maps__types = maps__eventTypesByGroup[group].split(" ");
+
+    maps__types.forEach(function (t) {
+      maps__eventGroupByType[t] = group;
+    });
+  });
+
+
+  // The parameters required by event constructors and init methods, in the order the init methods need them.
+
+  // There is no initKeyboardEvent or initKeyEvent here. Keyboard events are a goddamned mess. You can't fake them
+  // well in any browser - the which and keyCode properties are readonly, for example. So we don't actually use the
+  // KeyboardEvent constructor, or the initKeyboardEvent or initKeyEvent methods. Instead we use a bog standard
+  // Event and add the required parameters as expando properties.
+
+  // TODO I think in some browsers we need to use modifiersList instead of ctrlKey/shiftKey etc?
+  var maps__initialiserParams = {
+    initUIEvent: "view detail",
+    initMouseEvent: "view detail screenX screenY clientX clientY ctrlKey altKey shiftKey metaKey button relatedTarget",
+    initCompositionEvent: "view detail data locale",
+    initHashChangeEvent: "oldURL newURL",
+    initMessageEvent: "data origin lastEventId source ports",
+    initStorageEvent: "key oldValue newValue url storageArea",
+    initWheelEvent: "view detail screenX screenY clientX clientY ctrlKey altKey shiftKey metaKey button relatedTarget deltaX deltaY deltaZ deltaMode"
+  };
+
+  Object.keys(maps__initialiserParams).forEach(function (initMethod) {
+    maps__initialiserParams[initMethod] = maps__initialiserParams[initMethod].split(" ");
+  });
+
+
+  var maps__initialisersByGroup = {
+    UIEvent: [window.UIEvent, "initUIEvent"],
+    Event: [window.Event, "initEvent"],
+    FocusEvent: [window.FocusEvent, "initUIEvent"],
+    MouseEvent: [window.MouseEvent, "initMouseEvent"],
+    CompositionEvent: [window.CompositionEvent, "initCompositionEvent"],
+    HashChangeEvent: [window.HashChangeEvent, "initHashChangeEvent"],
+    KeyboardEvent: [window.Event, "initEvent"],
+    ProgressEvent: [window.ProgressEvent, "initEvent"],
+    MessageEvent: [window.MessageEvent, "initMessageEvent"], // TODO prefixed?
+    PageTransitionEvent: [window.PageTransitionEvent, "initEvent"],
+    PopStateEvent: [window.PopStateEvent, "initEvent"],
+    StorageEvent: [window.StorageEvent, "initStorageEvent"],
+    TouchEvent: [window.TouchEvent, "initTouchEvent"],
+    WheelEvent: [window.WheelEvent, "initWheelEvent"] // TODO this differs between browsers...
+  };
+
+  var extendWithKeyboardParams__keyboardParams = ["which", "keyCode", "shiftKey", "ctrlKey", "altKey", "metaKey"];
+
+  function extendWithKeyboardParams__extendWithKeyboardParams(event, params) {
+    var i = extendWithKeyboardParams__keyboardParams.length;
+    while (i--) {
+      event[extendWithKeyboardParams__keyboardParams[i]] = params[extendWithKeyboardParams__keyboardParams[i]];
+    }
+  }
+  var extendWithKeyboardParams__default = extendWithKeyboardParams__extendWithKeyboardParams;
+
+  var ancient__default = function () {
+    var methodName, initialisers, makeInitialiser, simulant;
+
+    initialisers = {};
+
+    makeInitialiser = function (methodName, paramsList) {
+      return function (event, type, params) {
+        var paramName, i;
+
+        event.type = type;
+
+        i = paramsList.length;
+        while (i--) {
+          paramName = paramsList[i];
+          event[paramName] = params[paramName] || maps__defaults[paramName];
+        }
+      };
+    };
+
+    for (methodName in maps__initialiserParams) {
+      if (maps__initialiserParams.hasOwnProperty(methodName)) {
+        initialisers[methodName] = makeInitialiser(methodName, maps__initialiserParams[methodName]);
+      }
+    }
+
+    initialisers.initEvent = makeInitialiser("initEvent", []);
 
+    simulant = function (type, params) {
+      var event, group, initialiserName, initialise, isKeyboardEvent;
 
-var useAncient = function () {
-	// create initialisers
-	(function () {
-		var methodName, makeInitialiser;
+      group = maps__eventGroupByType[type];
+
+      if (group === "KeyboardEvent") {
+        isKeyboardEvent = true;
+        group = "Event";
+      }
 
-		initialisers = {};
+      initialiserName = maps__initialisersByGroup[group][1];
+      initialise = initialisers[initialiserName];
+
+      event = document.createEventObject();
+      initialise(event, type, params || {});
 
-		makeInitialiser = function ( methodName, paramsList ) {
-			return function ( event, type, params ) {
-				var paramName, i;
+      if (isKeyboardEvent) {
+        extendWithKeyboardParams__default(event, params);
+      }
 
-				event.type = type;
+      return event;
+    };
 
-				i = paramsList.length;
-				while ( i-- ) {
-					paramName = paramsList[i];
-					event[ paramName ] = params[ paramName ] || defaults[ paramName ];
-				}
-			};
-		};
+    simulant.mode = "ancient";
+    return simulant;
+  };
 
-		for ( methodName in initialiserParams ) {
-			if ( initialiserParams.hasOwnProperty( methodName ) ) {
-				initialisers[ methodName ] = makeInitialiser( methodName, initialiserParams[ methodName ] );
-			}
-		}
+  var legacy__default = function () {
+    var methodName, initialisers, makeInitialiser, simulant;
 
-		initialisers.initEvent = makeInitialiser( 'initEvent', [] );
-	}());
+    initialisers = {};
 
-	simulant = function ( type, params ) {
-		var event, group, initialiserName, initialise, isKeyboardEvent;
+    makeInitialiser = function (methodName, paramsList) {
+      return function (event, type, params) {
+        var args;
 
-		group = eventGroupByType[ type ];
+        // first three args are always `type`, `bubbles`, `cancelable`
+        args = [type, true, true]; // TODO some events don't bubble?
 
-		if ( group === 'KeyboardEvent' ) {
-			isKeyboardEvent = true;
-			group = 'Event';
-		}
+        paramsList.forEach(function (paramName) {
+          args.push(params[paramName] || maps__defaults[paramName]);
+        });
 
-		initialiserName = initialisersByGroup[ group ][1];
-		initialise = initialisers[ initialiserName ];
+        event[methodName].apply(event, args);
+      };
+    };
 
-		event = document.createEventObject();
-		initialise( event, type, params || {} );
+    Object.keys(maps__initialiserParams).forEach(function (methodName) {
+      initialisers[methodName] = makeInitialiser(methodName, maps__initialiserParams[methodName]);
+    });
 
-		if ( isKeyboardEvent ) {
-			extendWithKeyboardParams( event, params );
-		}
+    initialisers.initEvent = makeInitialiser("initEvent", []);
 
-		return event;
-	};
+    simulant = function (type, params) {
+      var event, group, initialiserName, initialise, isKeyboardEvent;
 
-	simulant.mode = 'ancient';
-};
+      group = maps__eventGroupByType[type];
 
+      if (group === "KeyboardEvent") {
+        isKeyboardEvent = true;
+        group = "Event";
+      }
 
-var useLegacy = function () {
-	// create initialisers
-	(function () {
-		var methodName, makeInitialiser;
+      initialiserName = maps__initialisersByGroup[group][1];
+      initialise = initialisers[initialiserName];
 
-		initialisers = {};
+      event = document.createEvent(group);
+      initialise(event, type, params || {});
 
-		makeInitialiser = function ( methodName, paramsList ) {
-			return function ( event, type, params ) {
-				var args, paramName, i, len;
+      if (isKeyboardEvent) {
+        extendWithKeyboardParams__default(event, params);
+      }
 
-				// first two args are always bubbles, cancelable
-				args = [ true, true ]; // TODO some events don't bubble?
+      return event;
+    };
 
-				len = paramsList.length;
-				for ( i=0; i<len; i+=1 ) {
-					paramName = paramsList[i];
-					args[ args.length ] = params[ paramName ] || defaults[ paramName ];
-				}
+    simulant.mode = "legacy";
+    return simulant;
+  };
 
-				args.unshift( type );
+  var modern__default = function () {
+    var simulant = function (type, params) {
+      if (params === undefined) params = {};
+      var event, group, Constructor, paramsList, paramName, i, extendedParams, isKeyboardEvent;
+
+      group = maps__eventGroupByType[type];
 
-				event[ methodName ].apply( event, args );
-			};
-		};
+      if (group === "KeyboardEvent") {
+        group = "Event"; // because you can't fake KeyboardEvents well in any browser
+        isKeyboardEvent = true;
+      }
 
-		for ( methodName in initialiserParams ) {
-			if ( initialiserParams.hasOwnProperty( methodName ) ) {
-				initialisers[ methodName ] = makeInitialiser( methodName, initialiserParams[ methodName ] );
-			}
-		}
+      Constructor = maps__initialisersByGroup[group][0];
 
-		initialisers.initEvent = makeInitialiser( 'initEvent', [] );
-	}());
+      extendedParams = {
+        bubbles: true, // TODO some events don't bubble?
+        cancelable: true
+      };
 
-	simulant = function ( type, params ) {
-		var event, group, initialiserName, initialise, isKeyboardEvent;
+      paramsList = maps__initialiserParams[maps__initialisersByGroup[group][1]];
+      i = (paramsList ? paramsList.length : 0);
 
-		group = eventGroupByType[ type ];
-
-		if ( group === 'KeyboardEvent' ) {
-			isKeyboardEvent = true;
-			group = 'Event';
-		}
-
-		initialiserName = initialisersByGroup[ group ][1];
-		initialise = initialisers[ initialiserName ];
-
-		event = document.createEvent( group );
-		initialise( event, type, params || {} );
-
-		if ( isKeyboardEvent ) {
-			extendWithKeyboardParams( event, params );
-		}
-
-		return event;
-	};
-
-	simulant.mode = 'legacy';
-};
-
-
-var useModern = function () {
-	simulant = function ( type, params ) {
-		var event, group, Constructor, paramsList, paramName, i, extendedParams, isKeyboardEvent;
-
-		group = eventGroupByType[ type ];
-
-		if ( group === 'KeyboardEvent' ) {
-			group = 'Event'; // because you can't fake KeyboardEvents well in any browser
-			isKeyboardEvent = true;
-		}
-
-		Constructor = initialisersByGroup[ group ][0];
-
-		if ( !params ) {
-			params = {};
-		}
-
-		extendedParams = {
-			bubbles: true, // TODO some events don't bubble?
-			cancelable: true
-		};
-
-		paramsList = initialiserParams[ initialisersByGroup[ group ][1] ];
-		i = ( paramsList ? paramsList.length : 0 );
-
-		while ( i-- ) {
-			paramName = paramsList[i];
-			extendedParams[ paramName ] = ( params[ paramName ] !== undefined ? params[ paramName ] : defaults[ paramName ] );
-		}
-
-		event = new Constructor( type, extendedParams );
-
-		if ( isKeyboardEvent ) {
-			extendWithKeyboardParams( event, params );
-		}
-
-		return event;
-	};
-
-	simulant.mode = 'modern';
-};
-
-
-var keyboardParams = [ 'which', 'keyCode', 'shiftKey', 'ctrlKey', 'altKey', 'metaKey' ];
-
-var extendWithKeyboardParams = function ( event, params ) {
-	var i = keyboardParams.length;
-	while ( i-- ) {
-		event[ keyboardParams[i] ] = params[ keyboardParams[i] ];
-	}
-};
-
-
-var eventGroupByType,
-	initialisers,
-	modern,
-	ancient,
-	modifiers,
-	getModifiersList;
-
-
-
-modifiers = [
-	[ 'ctrlKey',  'Control' ],
-	[ 'shiftKey', 'Shift'   ],
-	[ 'altKey',   'Alt'     ],
-	[ 'metaKey',  'Meta'    ]
-];
-
-getModifiersList = function ( params ) {
-	var list = [], i, modifier;
-
-	i = modifiers.length;
-	while ( i-- ) {
-		modifier = modifiers[i];
-		if ( params[ modifier[0] ] ) {
-			list[ list.length ] = modifier[1];
-		}
-	}
-
-	return list.join( ' ' );
-};
-
-
-// unpack event groups
-(function () {
-	var group, types, i, initMethod;
-
-	eventGroupByType = {};
-
-	for ( group in eventTypesByGroup ) {
-		if ( eventTypesByGroup.hasOwnProperty( group ) ) {
-			types = eventTypesByGroup[ group ].split( ' ' );
-
-			i = types.length;
-			while ( i-- ) {
-				eventGroupByType[ types[i] ] = group;
-			}
-		}
-	}
-
-	for ( initMethod in initialiserParams ) {
-		if ( initialiserParams.hasOwnProperty( initMethod ) ) {
-			initialiserParams[ initMethod ] = initialiserParams[ initMethod ].split( ' ' );
-		}
-	}
-}());
-
-
-
-try {
-	// event initialisersByGroup
-	new MouseEvent( 'click' );
-	modern = true;
-}
-
-catch ( err ) {
-	if ( !document.createEvent ) {
-		if ( document.createEventObject ) {
-			ancient = true;
-		} else {
-			throw new Error( 'Events cannot be created in this browser' );
-		}
-	}
-}
-
-if ( modern ) {
-	useModern();
-}
-
-else if ( !ancient ) {
-	useLegacy();
-}
-
-else {
-	useAncient();
-}
-
-
-simulant.params = function ( type ) {
-	var group;
-
-	group = eventGroupByType[ type ];
-	return initialiserParams[ initialisersByGroup[ group ][1] ].split( ' ' );
-};
-
-
-if ( document.dispatchEvent ) {
-	simulant.fire = function ( node, event, params ) {
-		if ( typeof event === 'string' ) {
-			event = simulant( event, params );
-		}
-
-		node.dispatchEvent( event );
-	};
-} else if ( document.fireEvent ) {
-	simulant.fire = function ( node, event, params ) {
-		if ( typeof event === 'string' ) {
-			event = simulant( event, params );
-		}
-
-		node.fireEvent( 'on' + event.type, event );
-
-		// Special case - checkbox inputs
-		if ( node.tagName === 'INPUT' && node.type === 'checkbox' ) {
-			node.click();
-		}
-	};
-}
-
-
-simulant.polyfill = function () {
-
-	// https://gist.github.com/Rich-Harris/6010282 via https://gist.github.com/jonathantneal/2869388
-	// addEventListener polyfill IE6+
-	var Event, addEventListener, removeEventListener, head, style;
-
-	Event = function ( e, element ) {
-		var property, instance = this;
-
-		for ( property in e ) {
-			instance[ property ] = e[ property ];
-		}
-
-		instance.currentTarget =  element;
-		instance.target = e.srcElement || element;
-		instance.timeStamp = +new Date();
-
-		instance.preventDefault = function () {
-			e.returnValue = false;
-		};
-
-		instance.stopPropagation = function () {
-			e.cancelBubble = true;
-		};
-	};
-
-	addEventListener = function ( type, listener ) {
-		var element = this, listeners, i;
-
-		listeners = element.listeners || ( element.listeners = [] );
-		i = listeners.length;
-
-		listeners[i] = [ listener, function (e) {
-			listener.call( element, new Event( e, element ) );
-		}];
-
-		element.attachEvent( 'on' + type, listeners[i][1] );
-	};
-
-	removeEventListener = function ( type, listener ) {
-		var element = this, listeners, i;
-
-		if ( !element.listeners ) {
-			return;
-		}
-
-		listeners = element.listeners;
-		i = listeners.length;
-
-		while ( i-- ) {
-			if ( listeners[i][0] === listener ) {
-				element.detachEvent( 'on' + type, listeners[i][1] );
-			}
-		}
-	};
-
-	global.addEventListener = document.addEventListener = addEventListener;
-	global.removeEventListener = document.removeEventListener = removeEventListener;
-
-	if ( 'Element' in global ) {
-		Element.prototype.addEventListener = addEventListener;
-		Element.prototype.removeEventListener = removeEventListener;
-	} else {
-		head = document.getElementsByTagName('head')[0];
-		style = document.createElement('style');
-
-		head.insertBefore( style, head.firstChild );
-
-		style.styleSheet.cssText = '*{-ms-event-prototype:expression(!this.addEventListener&&(this.addEventListener=addEventListener)&&(this.removeEventListener=removeEventListener))}';
-	}
-
-	addEventListener.simulant = true;
-
-};
-// export as AMD module
-if ( typeof define === "function" && define.amd ) {
-	define( function () {
-		return simulant;
-	});
-}
-
-// ... or as CommonJS module
-else if ( typeof module !== 'undefined' && module.exports ) {
-	module.exports = simulant;
-}
-
-// ... or as browser global
-else {
-	global.simulant = simulant;
-}
-
-}( typeof window !== 'undefined' ? window : this ));
+      while (i--) {
+        paramName = paramsList[i];
+        extendedParams[paramName] = (paramName in params ? params[paramName] : maps__defaults[paramName]);
+      }
+
+      event = new Constructor(type, extendedParams);
+
+      if (isKeyboardEvent) {
+        extendWithKeyboardParams__default(event, params);
+      }
+
+      return event;
+    };
+
+    simulant.mode = "modern";
+    return simulant;
+  };
+
+  function polyfill__polyfill() {
+    // https://gist.github.com/Rich-Harris/6010282 via https://gist.github.com/jonathantneal/2869388
+    // addEventListener polyfill IE6+
+    var Event, addEventListener, removeEventListener, head, style;
+
+    Event = function (e, element) {
+      var property, instance = this;
+
+      for (property in e) {
+        instance[property] = e[property];
+      }
+
+      instance.currentTarget = element;
+      instance.target = e.srcElement || element;
+      instance.timeStamp = +new Date();
+
+      instance.preventDefault = function () {
+        e.returnValue = false;
+      };
+
+      instance.stopPropagation = function () {
+        e.cancelBubble = true;
+      };
+    };
+
+    addEventListener = function (type, listener) {
+      var element = this, listeners, i;
+
+      listeners = element.listeners || (element.listeners = []);
+      i = listeners.length;
+
+      listeners[i] = [listener, function (e) {
+        listener.call(element, new Event(e, element));
+      }];
+
+      element.attachEvent("on" + type, listeners[i][1]);
+    };
+
+    removeEventListener = function (type, listener) {
+      var element = this, listeners, i;
+
+      if (!element.listeners) {
+        return;
+      }
+
+      listeners = element.listeners;
+      i = listeners.length;
+
+      while (i--) {
+        if (listeners[i][0] === listener) {
+          element.detachEvent("on" + type, listeners[i][1]);
+        }
+      }
+    };
+
+    window.addEventListener = document.addEventListener = addEventListener;
+    window.removeEventListener = document.removeEventListener = removeEventListener;
+
+    if ("Element" in window) {
+      Element.prototype.addEventListener = addEventListener;
+      Element.prototype.removeEventListener = removeEventListener;
+    } else {
+      head = document.getElementsByTagName("head")[0];
+      style = document.createElement("style");
+
+      head.insertBefore(style, head.firstChild);
+
+      style.styleSheet.cssText = "*{-ms-event-prototype:expression(!this.addEventListener&&(this.addEventListener=addEventListener)&&(this.removeEventListener=removeEventListener))}";
+    }
+
+    addEventListener.simulant = true;
+  }
+  var polyfill__default = polyfill__polyfill;
+
+  var simulant__simulant;
+
+  try {
+    new MouseEvent("click");
+    simulant__simulant = modern__default();
+  } catch (err) {
+    if (!document.createEvent) {
+      if (document.createEventObject) {
+        simulant__simulant = ancient__default();
+      } else {
+        throw new Error("Events cannot be created in this browser");
+      }
+    } else {
+      simulant__simulant = legacy__default();
+    }
+  }
+
+  if (document.dispatchEvent) {
+    simulant__simulant.fire = function (node, event, params) {
+      if (typeof event === "string") {
+        event = simulant__simulant(event, params);
+      }
+
+      node.dispatchEvent(event);
+      return event;
+    };
+  } else if (document.fireEvent) {
+    simulant__simulant.fire = function (node, event, params) {
+      if (typeof event === "string") {
+        event = simulant__simulant(event, params);
+      }
+
+      node.fireEvent("on" + event.type, event);
+
+      // Special case - checkbox inputs
+      if (node.tagName === "INPUT" && node.type === "checkbox") {
+        node.click();
+      }
+      return event;
+    };
+  }
+
+  simulant__simulant.polyfill = polyfill__default;
+
+  var simulant__default = simulant__simulant;
+
+  return simulant__default;
+}));
