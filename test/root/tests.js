@@ -20,7 +20,7 @@
 		});
 
 		simulant.fire( fixture, 'click' );
-		
+
 		fixture.removeEventListener( 'click', handler );
 	});
 
@@ -122,6 +122,21 @@
 		});
 
 		fixture.removeEventListener( 'keydown', handler );
+	});
+
+	test( 'simulant.fire() returns the event that was fired', function ( t ) {
+		var handler, e1, e2;
+
+		expect( 1 );
+
+		fixture.addEventListener( 'click', handler = function ( e ) {
+			e2 = e;
+		});
+
+		e1 = simulant.fire( fixture, 'click' );
+		t.strictEqual( e1, e2 );
+
+		fixture.removeEventListener( 'click', handler );
 	});
 
 }());
