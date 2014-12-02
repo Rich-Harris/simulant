@@ -4,4 +4,5 @@ node_modules/
 demo/
 tmp/
 .gobble
+.gobble-build
 .tmp

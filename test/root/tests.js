@@ -1,3 +1,4 @@
+/*global simulant, test, expect, console, addEventListener */
 (function () {
 
 	'use strict';
@@ -15,7 +16,7 @@
 
 		expect( 1 );
 
-		fixture.addEventListener( 'click', handler = function ( event ) {
+		fixture.addEventListener( 'click', handler = function () {
 			t.ok( true );
 		});
 
@@ -57,7 +58,7 @@
 		fixture.innerHTML = '<input type="checkbox">';
 		input = fixture.querySelector( 'input' );
 
-		input.addEventListener( 'change', function ( event ) {
+		input.addEventListener( 'change', function () {
 			console.log( 'change!' );
 		});
 
@@ -137,6 +138,19 @@
 		t.strictEqual( e1, e2 );
 
 		fixture.removeEventListener( 'click', handler );
+	});
+
+	test( 'simulant.fire(node,"blur") works even in PhantomJS 1.x', function ( t ) {
+		var input;
+
+		input = document.createElement( 'input' );
+		input.addEventListener( 'blur', function () {
+			t.ok( true );
+		});
+
+		expect( 1 );
+
+		simulant.fire( input, 'blur' );
 	});
 
 }());
