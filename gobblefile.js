@@ -1,9 +1,25 @@
 var gobble = require( 'gobble' );
 
-module.exports = gobble( 'src' )
+var lib = gobble( 'src' )
+	.transform( 'babel', {
+		blacklist: [ 'es6.modules', 'useStrict' ],
+		sourceMap: true
+	})
 	.transform( require( 'gobble-esperanto-bundle' ), {
 		entry: 'simulant',
 		type: 'umd',
-		name: 'simulant'
+		name: 'simulant',
+		sourceMap: true
 	})
-	.transform( '6to5' );
+	.transform( 'sorcery' );
+
+var test = gobble([
+	'test'
+]);
+
+
+if ( gobble.env() === 'production' ) {
+	module.exports = lib;
+} else {
+	module.exports = gobble([ lib, test ]);
+}

@@ -1,20 +1,30 @@
 {
   "name": "simulant",
   "description": "Simulated DOM events for automated testing",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "author": {
     "name": "Rich Harris"
   },
   "license": "MIT",
   "repository": "https://github.com/Rich-Harris/simulant",
-  "main": "simulant.js",
+  "main": "dist/simulant.js",
+  "jsnext:main": "src/simulant.js",
   "scripts": {
     "prepublish": "npm run build",
-    "build": "gobble build .tmp -f; cp .tmp/simulant.js simulant.js"
+    "build": "npm run test; mkdir -p dist; cp .tmp/simulant.js dist/simulant.js",
+    "test": "mocha",
+    "start": "gobble"
   },
   "devDependencies": {
-    "gobble": "^0.6.10",
-    "gobble-es6-transpiler": "^0.1.0"
+    "chai": "^2.2.0",
+    "gobble": "^0.7.13",
+    "gobble-babel": "^5.0.0",
+    "gobble-cli": "^0.3.5",
+    "gobble-esperanto-bundle": "^0.1.7",
+    "gobble-sorcery": "^0.2.5",
+    "jsdom": "^4.1.0",
+    "mocha": "^2.2.3",
+    "phantomjs": "^1.9.16"
   },
   "files": [
     "simulant.js",

@@ -1,8 +1,5 @@
 .DS_Store
 node_modules/
-/index.html
-demo/
-tmp/
 .gobble
 .gobble-build
 .tmp

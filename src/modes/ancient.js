@@ -2,23 +2,20 @@ import { defaults, eventGroupByType, initialisersByGroup, initialiserParams } fr
 import extendWithKeyboardParams from '../utils/extendWithKeyboardParams';
 
 export default function () {
-	var methodName, initialisers, makeInitialiser, simulant;
-
-	initialisers = {};
-
-	makeInitialiser = function ( methodName, paramsList ) {
+	function makeInitialiser ( methodName, paramsList ) {
 		return function ( event, type, params ) {
-			var paramName, i;
-
 			event.type = type;
 
-			i = paramsList.length;
+			let i = paramsList.length;
 			while ( i-- ) {
-				paramName = paramsList[i];
+				const paramName = paramsList[i];
 				event[ paramName ] = params[ paramName ] || defaults[ paramName ];
 			}
 		};
-	};
+	}
+
+	let initialisers = {};
+	let methodName;
 
 	for ( methodName in initialiserParams ) {
 		if ( initialiserParams.hasOwnProperty( methodName ) ) {
@@ -28,20 +25,19 @@ export default function () {
 
 	initialisers.initEvent = makeInitialiser( 'initEvent', [] );
 
-	simulant = function ( type, params ) {
-		var event, group, initialiserName, initialise, isKeyboardEvent;
-
-		group = eventGroupByType[ type ];
+	function simulant ( type, params ) {
+		let group = eventGroupByType[ type ];
+		let isKeyboardEvent;
 
 		if ( group === 'KeyboardEvent' ) {
 			isKeyboardEvent = true;
 			group = 'Event';
 		}
 
-		initialiserName = initialisersByGroup[ group ][1];
-		initialise = initialisers[ initialiserName ];
+		const initialiserName = initialisersByGroup[ group ][1];
+		const initialise = initialisers[ initialiserName ];
 
-		event = document.createEventObject();
+		let event = document.createEventObject();
 		initialise( event, type, params || {} );
 
 		if ( isKeyboardEvent ) {
@@ -49,7 +45,7 @@ export default function () {
 		}
 
 		return event;
-	};
+	}
 
 	simulant.mode = 'ancient';
 	return simulant;

@@ -90,7 +90,18 @@ Normally, events have side-effects - a click in a text input will focus it, a mo
 There are exceptions - a click event on a checkbox input will cause a secondary change event to be fired, for example.
 
 
+## Building and testing
+
+Simulant uses [jsdom](https://github.com/tmpvar/jsdom) for testing, which requires [io.js](iojs.org) rather than node.js.
+
+To build the library, do `npm run build`.
+
+To test the library using jsdom, do `npm test`.
+
+To test the library in browsers, do `npm start`. This will build the library (and watch the source files for changes) and serve a simple test page to [localhost:4567](http://localhost:4567).
+
+
 ## License
 
-Copyright (c) 2013-14 [Rich Harris](http://rich-harris.co.uk) ([@rich_harris](http://twitter.com/rich_harris)).
+Copyright (c) 2013-15 [Rich Harris](http://rich-harris.co.uk) ([@rich_harris](http://twitter.com/rich_harris)).
 Released under an MIT license.

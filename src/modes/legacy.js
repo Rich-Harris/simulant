@@ -2,11 +2,7 @@ import { defaults, eventGroupByType, initialisersByGroup, initialiserParams } fr
 import extendWithKeyboardParams from '../utils/extendWithKeyboardParams';
 
 export default function () {
-	var methodName, initialisers, makeInitialiser, simulant;
-
-	initialisers = {};
-
-	makeInitialiser = function ( methodName, paramsList ) {
+	function makeInitialiser ( methodName, paramsList ) {
 		return function ( event, type, params ) {
 			var args;
 
@@ -19,7 +15,9 @@ export default function () {
 
 			event[ methodName ].apply( event, args );
 		};
-	};
+	}
+
+	let initialisers = {};
 
 	Object.keys( initialiserParams ).forEach( methodName => {
 		initialisers[ methodName ] = makeInitialiser( methodName, initialiserParams[ methodName ] );
@@ -27,7 +25,7 @@ export default function () {
 
 	initialisers.initEvent = makeInitialiser( 'initEvent', [] );
 
-	simulant = function ( type, params ) {
+	function simulant ( type, params ) {
 		var event, group, initialiserName, initialise, isKeyboardEvent;
 
 		group = eventGroupByType[ type ];
@@ -48,7 +46,7 @@ export default function () {
 		}
 
 		return event;
-	};
+	}
 
 	simulant.mode = 'legacy';
 	return simulant;
