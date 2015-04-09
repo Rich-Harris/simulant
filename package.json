@@ -1,7 +1,7 @@
 {
   "name": "simulant",
   "description": "Simulated DOM events for automated testing",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "author": {
     "name": "Rich Harris"
   },
@@ -27,7 +27,8 @@
     "phantomjs": "^1.9.16"
   },
   "files": [
-    "simulant.js",
+    "dist",
+    "src",
     "README.md"
   ]
 }

@@ -1,5 +1,9 @@
 # changelog
 
+## 0.1.5
+
+* Fix package.json ([#7](https://github.com/Rich-Harris/simulant/issues/7))
+
 ## 0.1.4
 
 * handle `beforeunload` and similar events ([#6](https://github.com/Rich-Harris/simulant/issues/6))
