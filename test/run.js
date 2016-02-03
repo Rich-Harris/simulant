@@ -42,6 +42,11 @@ nightmare.on( 'console', function ( method, message, data ) {
 
 console.log( 'running tests...' );
 
+var timeout = setTimeout( () => {
+	console.log( 'timed out!' );
+	process.exit( 1 );
+}, 10000 );
+
 nightmare
 	.goto( 'file://' + path.resolve( __dirname, 'index.html' ) )
 	.run( () => {
