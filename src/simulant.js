@@ -1,7 +1,7 @@
-import ancient from './modes/ancient';
-import legacy from './modes/legacy';
-import modern from './modes/modern';
-import polyfill from './utils/polyfill';
+import ancient from './modes/ancient.js';
+import legacy from './modes/legacy.js';
+import modern from './modes/modern.js';
+import polyfill from './utils/polyfill.js';
 
 var simulant;
 

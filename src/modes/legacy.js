@@ -1,5 +1,5 @@
-import { defaults, eventGroupByType, initialisersByGroup, initialiserParams } from '../maps';
-import extendWithKeyboardParams from '../utils/extendWithKeyboardParams';
+import { defaults, eventGroupByType, initialisersByGroup, initialiserParams } from '../maps.js';
+import extendWithKeyboardParams from '../utils/extendWithKeyboardParams.js';
 
 export default function () {
 	function makeInitialiser ( methodName, paramsList ) {

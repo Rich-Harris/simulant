@@ -1,23 +1,109 @@
 <html>
 <head>
 	<meta charset="utf-8">
+	<meta name='viewport' content='width=device-width, initial-scale=1'>
+
 	<title>simulant.js tests</title>
-	<link rel="stylesheet" href="vendor/mocha.css" />
+
+	<style>
+		body {
+			font-family: 'Helvetica Neue', arial, sans-serif;
+			font-weight: 200;
+			color: #333;
+		}
+
+		.pass::before, .fail::before {
+			margin: 0 0.2em 0 0;
+		}
+
+		.pass::before {
+			content: '\2713';
+			color: rgb(50,200,50);
+		}
+
+		.fail::before {
+			content: '\2717';
+			color: rgb(200,50,50);
+		}
+	</style>
 </head>
 <body>
-	<div id="mocha"></div>
+	<main id='results'></main>
+	<div id='fixture'></div>
 
-	<script src="simulant.js"></script>
-	<script src="vendor/mocha.js"></script>
-	<script src="vendor/chai.js"></script>
-	<script>mocha.setup('bdd');</script>
-	<script src="tests.js"></script>
+	<script src="../dist/simulant.umd.js"></script>
 	<script>
-		var fixture;
-		var container = document.querySelector( '#mocha' );
+		var resultsContainer = document.querySelector( '#results' );
+		var el;
 
-		mocha.checkLeaks();
-		mocha.run();
+		var ran;
+
+		var assert = {
+			equal: function ( a, b, message ) {
+				ran += 1;
+
+				if ( a !== b ) {
+					console.log( 'error', 'not equal', a, b );
+					errored = true;
+				} else {
+					console.log( 'ok' );
+				}
+			},
+
+			ok: function ( condition, message ) {
+				ran += 1;
+
+				if ( !condition ) {
+					console.log( 'error', 'not ok', condition );
+					errored = true;
+				} else {
+					console.log( 'ok' );
+				}
+			}
+		};
+
+		var expected;
+		function expect ( num ) {
+			expected = num;
+		}
+
+		var errored;
+
+		function it ( title, test ) {
+			console.log( 'start', title );
+
+			errored = false;
+			expected = null;
+			ran = 0;
+
+			el = document.createElement( 'div' );
+			fixture.appendChild( el );
+
+			test();
+
+			fixture.removeChild( el );
+
+			if ( ran !== expected ) {
+				errored = true;
+				console.log( 'error', 'expected ' + expected + ' tests, but ' + ran + ' ran' );
+			}
+
+			var result = document.createElement( 'div' );
+			result.textContent = title;
+
+			if ( errored ) {
+				result.className = 'fail';
+			} else {
+				result.className = 'pass';
+			}
+
+			resultsContainer.appendChild( result );
+
+			console.log( 'end' );
+			console.log( '' );
+		}
 	</script>
+
+	<script src="tests.js"></script>
 </body>
 </html>
