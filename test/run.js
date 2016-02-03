@@ -40,8 +40,11 @@ nightmare.on( 'console', function ( method, message, data ) {
 	}
 });
 
+console.log( 'running tests...' );
+
 nightmare
 	.goto( 'file://' + path.resolve( __dirname, 'index.html' ) )
 	.run( () => {
+		console.log( '...tests completed' );
 		process.exit( errored ? 1 : 0 );
 	});
