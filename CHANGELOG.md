@@ -1,5 +1,11 @@
 # changelog
 
+## 0.2.1
+
+* Allow `simulant.fire()` to be called with no arguments ([#11](https://github.com/Rich-Harris/simulant/pull/11))
+* Add all keyboard event params ([#11](https://github.com/Rich-Harris/simulant/pull/11))
+* Update build process
+
 ## 0.2.0
 
 * Compile ES module build to ES5
