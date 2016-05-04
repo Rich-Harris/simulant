@@ -103,5 +103,5 @@ To test the library in browsers, do `npm start`. This will build the library (an
 
 ## License
 
-Copyright (c) 2013-15 [Rich Harris](http://rich-harris.co.uk) ([@rich_harris](http://twitter.com/rich_harris)).
+Copyright (c) 2013-16 [Rich Harris](http://rich-harris.co.uk) ([@rich_harris](http://twitter.com/rich_harris)).
 Released under an MIT license.
