@@ -117,6 +117,8 @@ it( 'blurs an input', function () {
 it( 'fires beforeunload (#6)', function () {
 	expect( 1 );
 
+	var called = false;
+
 	function handler () {
 		called = true;
 	}
@@ -128,3 +130,23 @@ it( 'fires beforeunload (#6)', function () {
 
 	window.removeEventListener( 'beforeunload', handler );
 });
+
+if (typeof window.Touch === 'function') {
+	it( 'uses the correct initializer params for touch events', function () {
+		expect( 2 );
+
+		var called = false;
+		var hasTouches = false;
+
+		el.addEventListener('touchstart', function (event) {
+			called = true;
+			hasTouches = event.touches.length > 0;
+		});
+
+		simulant.fire(el, 'touchstart', {
+			touches: [new Touch({identifier: 0, target: el})]
+		});
+		assert.ok(called);
+		assert.ok(hasTouches);
+	});
+}

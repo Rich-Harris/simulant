@@ -87,6 +87,7 @@ Object.keys( eventTypesByGroup ).forEach( group => {
 export var initialiserParams = {
 	initUIEvent:          'view detail',
 	initMouseEvent:       'view detail screenX screenY clientX clientY ctrlKey altKey shiftKey metaKey button relatedTarget',
+	initTouchEvent:       'view detail touches targetTouches changedTouches ctrlKey altKey shiftKey metaKey',
 	initCompositionEvent: 'view detail data locale',
 	initHashChangeEvent:  'oldURL newURL',
 	initMessageEvent:     'data origin lastEventId source ports',
@@ -115,4 +116,3 @@ export var initialisersByGroup = {
 	TouchEvent:          [ window.TouchEvent,          'initTouchEvent'       ],
 	WheelEvent:          [ window.WheelEvent,          'initWheelEvent'       ] // TODO this differs between browsers...
 };
-
