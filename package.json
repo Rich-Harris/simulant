@@ -1,7 +1,7 @@
 {
   "name": "simulant",
   "description": "Simulated DOM events for automated testing",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "author": {
     "name": "Rich Harris"
   },
@@ -23,7 +23,7 @@
     "eslint": "^2.8.0",
     "nightmare": "^2.3.4",
     "rollup": "^0.26.0",
-    "rollup-plugin-buble": "^0.6.0"
+    "rollup-plugin-buble": "^0.7.0"
   },
   "files": [
     "dist",

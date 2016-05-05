@@ -1,5 +1,9 @@
 # changelog
 
+## 0.2.2
+
+* Support initializer params with touch events ([#13](https://github.com/Rich-Harris/simulant/pull/13))
+
 ## 0.2.1
 
 * Allow `simulant.fire()` to be called with no arguments ([#11](https://github.com/Rich-Harris/simulant/pull/11))
