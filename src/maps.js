@@ -41,6 +41,7 @@ var eventTypesByGroup = {
 	TimeEvent:                   'beginEvent endEvent repeatEvent',
 	FocusEvent:                  'blur focus focusin focusout',
 	MouseEvent:                  'click contextmenu dblclick mousedown mouseenter mouseleave mousemove mouseout mouseover mouseup show',
+	PointerEvent:                'pointerover pointerenter pointerdown pointermove pointerup pointercancel pointerout pointerleave',
 	SensorEvent:                 'compassneedscalibration userproximity',
 	OfflineAudioCompletionEvent: 'complete',
 	CompositionEvent:            'compositionend compositionstart compositionupdate',
@@ -87,6 +88,7 @@ Object.keys( eventTypesByGroup ).forEach( group => {
 export var initialiserParams = {
 	initUIEvent:          'view detail',
 	initMouseEvent:       'view detail screenX screenY clientX clientY ctrlKey altKey shiftKey metaKey button relatedTarget',
+	initPointerEvent:     'view detail screenX screenY clientX clientY ctrlKey altKey shiftKey metaKey button relatedTarget pointerId width height pressure tiltX tiltY pointerType isPrimary',
 	initTouchEvent:       'view detail touches targetTouches changedTouches ctrlKey altKey shiftKey metaKey',
 	initCompositionEvent: 'view detail data locale',
 	initHashChangeEvent:  'oldURL newURL',
@@ -105,6 +107,7 @@ export var initialisersByGroup = {
 	Event:               [ window.Event,               'initEvent'            ],
 	FocusEvent:          [ window.FocusEvent,          'initUIEvent'          ],
 	MouseEvent:          [ window.MouseEvent,          'initMouseEvent'       ],
+	PointerEvent:        [ window.PointerEvent,        'initPointerEvent'     ],
 	CompositionEvent:    [ window.CompositionEvent,    'initCompositionEvent' ],
 	HashChangeEvent:     [ window.HashChangeEvent,     'initHashChangeEvent'  ],
 	KeyboardEvent:       [ window.Event,               'initEvent'            ],
